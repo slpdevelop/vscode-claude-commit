@@ -21,18 +21,39 @@ npm run compile
 
 ## Настройка
 
-### 1. Получите API ключ
+У вас есть два варианта:
 
-1. Перейдите на https://console.anthropic.com/
-2. Создайте или войдите в аккаунт
-3. Перейдите в раздел API Keys
-4. Создайте новый ключ
+### Вариант 1: Anthropic API (требует API ключ)
 
-### 2. Настройте расширение
+1. Получите API ключ:
+   - Перейдите на https://console.anthropic.com/
+   - Создайте или войдите в аккаунт
+   - Перейдите в раздел API Keys
+   - Создайте новый ключ
 
-1. В VSCode откройте настройки (`Ctrl+,`)
-2. Найдите "Claude Commit"
-3. Вставьте ваш API ключ в поле "Api Key"
+2. Настройте расширение:
+   - В VSCode откройте настройки (`Ctrl+,`)
+   - Найдите "Claude Commit"
+   - Set **Provider** = `anthropic`
+   - Вставьте ваш API ключ в поле "Api Key"
+
+### Вариант 2: AWS Bedrock (использует AWS credentials)
+
+**Рекомендуется если у вас уже есть AWS аккаунт!**
+
+1. Настройте AWS credentials:
+   ```bash
+   aws configure
+   ```
+
+2. Настройте расширение:
+   - В VSCode откройте настройки (`Ctrl+,`)
+   - Найдите "Claude Commit"
+   - Set **Provider** = `bedrock`
+   - Set **Aws Region** = `us-east-1` (или ваш регион)
+   - (Опционально) Set **Aws Profile** если используете named profile
+
+3. **Подробная инструкция:** См. [BEDROCK_SETUP.md](BEDROCK_SETUP.md)
 
 ## Использование
 

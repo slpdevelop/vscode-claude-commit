@@ -27,10 +27,24 @@ Generate high-quality git commit messages using Claude AI directly from VSCode.
 
 ## Setup
 
+### Option 1: Anthropic API (Direct)
+
 1. Get your Anthropic API key from https://console.anthropic.com/
 2. Open VSCode Settings (`Ctrl+,` or `Cmd+,`)
 3. Search for "Claude Commit"
-4. Enter your API key in "Claude Commit: Api Key"
+4. Set "Provider" to `anthropic`
+5. Enter your API key in "Claude Commit: Api Key"
+
+### Option 2: AWS Bedrock (Recommended for AWS users)
+
+1. Configure AWS credentials (see [BEDROCK_SETUP.md](BEDROCK_SETUP.md))
+2. Open VSCode Settings (`Ctrl+,` or `Cmd+,`)
+3. Search for "Claude Commit"
+4. Set "Provider" to `bedrock`
+5. Set "Aws Region" (e.g., `us-east-1`)
+6. Optionally set "Aws Profile" if using named profiles
+
+**Detailed Bedrock setup:** See [BEDROCK_SETUP.md](BEDROCK_SETUP.md)
 
 ## Usage
 
@@ -50,7 +64,10 @@ The extension will:
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `claudeCommit.apiKey` | `""` | Your Anthropic API key |
+| `claudeCommit.provider` | `anthropic` | API provider: `anthropic` or `bedrock` |
+| `claudeCommit.apiKey` | `""` | Your Anthropic API key (for `anthropic` provider) |
+| `claudeCommit.awsRegion` | `us-east-1` | AWS region (for `bedrock` provider) |
+| `claudeCommit.awsProfile` | `""` | AWS profile name (optional, for `bedrock`) |
 | `claudeCommit.model` | `claude-haiku-4-5-20251001` | Claude model to use |
 | `claudeCommit.useConventionalCommits` | `true` | Use Conventional Commits format |
 | `claudeCommit.analyzeAllChanges` | `true` | Analyze all changes (not just staged) |
@@ -109,7 +126,9 @@ npm run package
 
 - VSCode 1.80.0 or higher
 - Git repository
-- Anthropic API key
+- **Either:**
+  - Anthropic API key (for direct API access), **OR**
+  - AWS credentials with Bedrock access (for AWS Bedrock)
 
 ## License
 

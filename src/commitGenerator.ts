@@ -1,15 +1,20 @@
 import * as vscode from 'vscode';
 import Anthropic from '@anthropic-ai/sdk';
+import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
+import { fromIni } from '@aws-sdk/credential-providers';
+
+type Provider = 'anthropic' | 'bedrock';
 
 export class ClaudeCommitGenerator {
     private anthropic: Anthropic | null = null;
+    private bedrock: BedrockRuntimeClient | null = null;
 
-    private getClient(): Anthropic {
+    private getAnthropicClient(): Anthropic {
         const config = vscode.workspace.getConfiguration('claudeCommit');
         const apiKey = config.get<string>('apiKey');
 
         if (!apiKey) {
-            throw new Error('API key not configured');
+            throw new Error('API key not configured. Please set claudeCommit.apiKey in settings.');
         }
 
         if (!this.anthropic) {
@@ -19,8 +24,37 @@ export class ClaudeCommitGenerator {
         return this.anthropic;
     }
 
+    private getBedrockClient(): BedrockRuntimeClient {
+        const config = vscode.workspace.getConfiguration('claudeCommit');
+        const region = config.get<string>('awsRegion') || 'us-east-1';
+        const profile = config.get<string>('awsProfile');
+
+        if (!this.bedrock) {
+            const clientConfig: any = { region };
+
+            if (profile) {
+                clientConfig.credentials = fromIni({ profile });
+            }
+
+            this.bedrock = new BedrockRuntimeClient(clientConfig);
+        }
+
+        return this.bedrock;
+    }
+
+    private getBedrockModelId(model: string): string {
+        const modelMap: Record<string, string> = {
+            'claude-haiku-4-5-20251001': 'us.anthropic.claude-haiku-4-5-20251001:0',
+            'claude-sonnet-4-6': 'us.anthropic.claude-sonnet-4-6:0',
+            'claude-opus-4-8': 'us.anthropic.claude-opus-4-8:0'
+        };
+
+        return modelMap[model] || modelMap['claude-haiku-4-5-20251001'];
+    }
+
     async generateCommitMessage(repository: any): Promise<string | null> {
         const config = vscode.workspace.getConfiguration('claudeCommit');
+        const provider = config.get<string>('provider') as Provider || 'anthropic';
         const model = config.get<string>('model') || 'claude-haiku-4-5-20251001';
         const useConventionalCommits = config.get<boolean>('useConventionalCommits', true);
         const analyzeAllChanges = config.get<boolean>('analyzeAllChanges', true);
@@ -46,29 +80,69 @@ export class ClaudeCommitGenerator {
         const prompt = this.buildPrompt(diff, useConventionalCommits);
 
         try {
-            const client = this.getClient();
-            const message = await client.messages.create({
-                model: model,
-                max_tokens: 500,
-                messages: [
-                    {
-                        role: 'user',
-                        content: prompt
-                    }
-                ]
-            });
-
-            if (message.content[0].type === 'text') {
-                return message.content[0].text.trim();
+            if (provider === 'bedrock') {
+                return await this.generateWithBedrock(model, prompt);
+            } else {
+                return await this.generateWithAnthropic(model, prompt);
             }
-
-            return null;
         } catch (error) {
             if (error instanceof Error) {
                 throw new Error(`Claude API error: ${error.message}`);
             }
             throw error;
         }
+    }
+
+    private async generateWithAnthropic(model: string, prompt: string): Promise<string | null> {
+        const client = this.getAnthropicClient();
+        const message = await client.messages.create({
+            model: model,
+            max_tokens: 500,
+            messages: [
+                {
+                    role: 'user',
+                    content: prompt
+                }
+            ]
+        });
+
+        if (message.content[0].type === 'text') {
+            return message.content[0].text.trim();
+        }
+
+        return null;
+    }
+
+    private async generateWithBedrock(model: string, prompt: string): Promise<string | null> {
+        const client = this.getBedrockClient();
+        const bedrockModelId = this.getBedrockModelId(model);
+
+        const payload = {
+            anthropic_version: 'bedrock-2023-05-31',
+            max_tokens: 500,
+            messages: [
+                {
+                    role: 'user',
+                    content: prompt
+                }
+            ]
+        };
+
+        const command = new InvokeModelCommand({
+            modelId: bedrockModelId,
+            contentType: 'application/json',
+            accept: 'application/json',
+            body: JSON.stringify(payload)
+        });
+
+        const response = await client.send(command);
+        const responseBody = JSON.parse(new TextDecoder().decode(response.body));
+
+        if (responseBody.content && responseBody.content[0] && responseBody.content[0].text) {
+            return responseBody.content[0].text.trim();
+        }
+
+        return null;
     }
 
     private buildPrompt(diff: string, useConventionalCommits: boolean): string {

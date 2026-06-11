@@ -26,16 +26,21 @@ export function activate(context: vscode.ExtensionContext) {
 
 async function generateCommitMessage() {
     const config = vscode.workspace.getConfiguration('claudeCommit');
+    const provider = config.get<string>('provider') || 'anthropic';
     const apiKey = config.get<string>('apiKey');
 
-    if (!apiKey) {
+    if (provider === 'anthropic' && !apiKey) {
         const action = await vscode.window.showErrorMessage(
-            'Anthropic API key is not configured. Please set your API key in settings.',
-            'Open Settings'
+            'Anthropic API key is not configured. Please set your API key in settings or switch to Bedrock provider.',
+            'Open Settings',
+            'Use Bedrock'
         );
 
         if (action === 'Open Settings') {
-            vscode.commands.executeCommand('workbench.action.openSettings', 'claudeCommit.apiKey');
+            vscode.commands.executeCommand('workbench.action.openSettings', 'claudeCommit');
+        } else if (action === 'Use Bedrock') {
+            await config.update('provider', 'bedrock', vscode.ConfigurationTarget.Global);
+            vscode.window.showInformationMessage('Switched to AWS Bedrock. Make sure your AWS credentials are configured.');
         }
         return;
     }

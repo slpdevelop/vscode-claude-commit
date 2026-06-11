@@ -12,14 +12,25 @@ code E:/work/vscode-workspaces/vscode-claude-commit
 
 Это запустит расширение в режиме разработки. Откроется новое окно VSCode с заголовком **[Extension Development Host]**.
 
-### 3️⃣ Настройте API ключ
+### 3️⃣ Настройте доступ к Claude
 
-В новом окне:
-1. Нажмите `Ctrl+,` (открыть настройки)
-2. Найдите "Claude Commit"
-3. Вставьте ваш Anthropic API ключ
+**У вас есть два варианта:**
 
-**Где взять ключ?** → https://console.anthropic.com/
+#### Вариант А: Anthropic API
+
+1. Получите API ключ → https://console.anthropic.com/
+2. В Extension Development Host: `Ctrl+,` → "Claude Commit"
+3. Set **Provider** = `anthropic`
+4. Вставьте API ключ
+
+#### Вариант Б: AWS Bedrock (БЕЗ API ключа!)
+
+1. Настройте AWS: `aws configure`
+2. В Extension Development Host: `Ctrl+,` → "Claude Commit"
+3. Set **Provider** = `bedrock`
+4. Set **Aws Region** = `us-east-1`
+
+**Детали:** См. [BEDROCK_SETUP.md](BEDROCK_SETUP.md)
 
 ---
 

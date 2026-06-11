@@ -1,8 +1,8 @@
 {
   "name": "claude-commit",
   "displayName": "Claude Commit Message Generator",
-  "description": "Generate commit messages using Claude AI",
-  "version": "0.1.0",
+  "description": "Generate commit messages using Claude AI (Anthropic API or AWS Bedrock)",
+  "version": "0.2.0",
   "publisher": "your-publisher-name",
   "engines": {
     "vscode": "^1.80.0"
@@ -17,9 +17,6 @@
     "ai",
     "claude",
     "commit message"
-  ],
-  "activationEvents": [
-    "onCommand:claude-commit.generate"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -42,11 +39,36 @@
     "configuration": {
       "title": "Claude Commit",
       "properties": {
+        "claudeCommit.provider": {
+          "type": "string",
+          "default": "anthropic",
+          "enum": [
+            "anthropic",
+            "bedrock"
+          ],
+          "enumDescriptions": [
+            "Direct Anthropic API (requires API key)",
+            "AWS Bedrock (requires AWS credentials)"
+          ],
+          "description": "Claude API provider"
+        },
         "claudeCommit.apiKey": {
           "type": "string",
           "default": "",
-          "description": "Anthropic API key for Claude",
-          "markdownDescription": "Your Anthropic API key. Get one at https://console.anthropic.com/"
+          "description": "Anthropic API key (only for 'anthropic' provider)",
+          "markdownDescription": "Your Anthropic API key. Get one at https://console.anthropic.com/. Only needed when provider is 'anthropic'."
+        },
+        "claudeCommit.awsRegion": {
+          "type": "string",
+          "default": "us-east-1",
+          "description": "AWS region for Bedrock (only for 'bedrock' provider)",
+          "markdownDescription": "AWS region where Bedrock is available. Common: us-east-1, us-west-2, eu-west-1. Only needed when provider is 'bedrock'."
+        },
+        "claudeCommit.awsProfile": {
+          "type": "string",
+          "default": "",
+          "description": "AWS profile name (optional, for 'bedrock' provider)",
+          "markdownDescription": "AWS CLI profile to use. Leave empty to use default credentials. Only for 'bedrock' provider."
         },
         "claudeCommit.model": {
           "type": "string",
@@ -94,11 +116,13 @@
     "@types/vscode": "^1.80.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "@vscode/vsce": "^2.19.0",
     "eslint": "^8.45.0",
-    "typescript": "^5.1.6",
-    "@vscode/vsce": "^2.19.0"
+    "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.30.0"
+    "@anthropic-ai/sdk": "^0.30.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.1066.0",
+    "@aws-sdk/credential-providers": "^3.1066.0"
   }
 }

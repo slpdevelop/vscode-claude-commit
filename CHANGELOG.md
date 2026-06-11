@@ -2,6 +2,25 @@
 
 All notable changes to the "Claude Commit" extension will be documented in this file.
 
+## [0.2.0] - 2026-06-11
+
+### Added
+- 🚀 AWS Bedrock support - use Claude without Anthropic API key!
+- Provider selection: choose between Anthropic API or AWS Bedrock
+- AWS region and profile configuration
+- Automatic AWS credentials detection
+- Comprehensive Bedrock setup guide
+
+### Changed
+- Provider is now configurable in settings
+- Better error messages for missing credentials
+- Quick switch between providers
+
+### Documentation
+- Added BEDROCK_SETUP.md with detailed AWS setup instructions
+- Updated README.md with provider options
+- Updated all guides to mention both providers
+
 ## [0.1.0] - 2026-06-11
 
 ### Added
