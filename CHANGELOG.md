@@ -2,6 +2,17 @@
 
 All notable changes to the "Claude Commit" extension will be documented in this file.
 
+## [0.2.1] - 2026-06-11
+
+### Fixed
+- 🔧 Corrected Bedrock model IDs (was using invalid identifiers)
+- Now using: `anthropic.claude-3-5-haiku-20241022-v1:0` instead of `us.anthropic.claude-haiku-4-5-20251001:0`
+- Fixed command registration with `activationEvents: ["*"]`
+
+### Changed
+- Updated BEDROCK_SETUP.md with correct model IDs
+- Added BEDROCK_MODELS.md with detailed model mapping documentation
+
 ## [0.2.0] - 2026-06-11
 
 ### Added

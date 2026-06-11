@@ -43,10 +43,12 @@ export class ClaudeCommitGenerator {
     }
 
     private getBedrockModelId(model: string): string {
+        // Map VSCode setting names to Bedrock model IDs
+        // Note: Bedrock uses different naming - Claude 3.5 Haiku, Claude 3.5 Sonnet, etc.
         const modelMap: Record<string, string> = {
-            'claude-haiku-4-5-20251001': 'us.anthropic.claude-haiku-4-5-20251001:0',
-            'claude-sonnet-4-6': 'us.anthropic.claude-sonnet-4-6:0',
-            'claude-opus-4-8': 'us.anthropic.claude-opus-4-8:0'
+            'claude-haiku-4-5-20251001': 'anthropic.claude-3-5-haiku-20241022-v1:0',
+            'claude-sonnet-4-6': 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+            'claude-opus-4-8': 'anthropic.claude-3-opus-20240229-v1:0'
         };
 
         return modelMap[model] || modelMap['claude-haiku-4-5-20251001'];

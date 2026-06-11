@@ -149,7 +149,7 @@ aws bedrock list-foundation-models --region us-east-1
 ```bash
 aws bedrock-runtime invoke-model \
   --region us-east-1 \
-  --model-id us.anthropic.claude-haiku-4-5-20251001:0 \
+  --model-id anthropic.claude-3-5-haiku-20241022-v1:0 \
   --body '{"anthropic_version":"bedrock-2023-05-31","max_tokens":100,"messages":[{"role":"user","content":"Hi"}]}' \
   output.json
 
@@ -173,9 +173,11 @@ cat output.json
 
 | VSCode Setting | Bedrock Model ID |
 |----------------|------------------|
-| `claude-haiku-4-5-20251001` | `us.anthropic.claude-haiku-4-5-20251001:0` |
-| `claude-sonnet-4-6` | `us.anthropic.claude-sonnet-4-6:0` |
-| `claude-opus-4-8` | `us.anthropic.claude-opus-4-8:0` |
+| `claude-haiku-4-5-20251001` | `anthropic.claude-3-5-haiku-20241022-v1:0` |
+| `claude-sonnet-4-6` | `anthropic.claude-3-5-sonnet-20241022-v2:0` |
+| `claude-opus-4-8` | `anthropic.claude-3-opus-20240229-v1:0` |
+
+**См. также:** [BEDROCK_MODELS.md](BEDROCK_MODELS.md) для деталей
 
 ## Стоимость через Bedrock
 

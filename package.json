@@ -2,7 +2,7 @@
   "name": "claude-commit",
   "displayName": "Claude Commit Message Generator",
   "description": "Generate commit messages using Claude AI (Anthropic API or AWS Bedrock)",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "your-publisher-name",
   "author": {
     "name": "SLPsss"
