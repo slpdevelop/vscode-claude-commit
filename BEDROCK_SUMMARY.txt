@@ -1,0 +1,168 @@
+╔══════════════════════════════════════════════════════════════════╗
+║         🎉 AWS BEDROCK SUPPORT ДОБАВЛЕН! 🎉                      ║
+╚══════════════════════════════════════════════════════════════════╝
+
+✅ Теперь вы можете использовать Claude БЕЗ API ключа Anthropic!
+
+🔧 ЧТО ИЗМЕНИЛОСЬ:
+
+  ✓ Добавлен провайдер AWS Bedrock
+  ✓ Поддержка AWS credentials (IAM, profiles, SSO)
+  ✓ Автоматическое определение AWS credentials
+  ✓ Все 3 модели Claude через Bedrock
+  ✓ Полная обратная совместимость
+
+📚 НОВАЯ ДОКУМЕНТАЦИЯ:
+
+  📄 BEDROCK_SETUP.md - Полное руководство по настройке AWS Bedrock
+  📄 README.md        - Обновлён с опциями провайдеров
+  📄 QUICK_START.md   - Добавлены инструкции для Bedrock
+  📄 START_HERE.md    - Обновлён с выбором провайдера
+
+🚀 КАК ИСПОЛЬЗОВАТЬ:
+
+═══════════════════════════════════════════════════════════════════
+  Вариант 1: AWS Bedrock (БЕЗ API ключа!)
+═══════════════════════════════════════════════════════════════════
+
+1. Настройте AWS credentials:
+   
+   aws configure
+   
+   Или используйте существующий AWS profile
+
+2. Откройте VSCode Settings (Ctrl+,)
+
+3. Найдите "Claude Commit" и настройте:
+   
+   Provider:    bedrock
+   Aws Region:  us-east-1 (или ваш регион)
+   Aws Profile: (оставьте пустым для default)
+
+4. Готово! Используйте как обычно (✨ в Source Control)
+
+═══════════════════════════════════════════════════════════════════
+  Вариант 2: Anthropic API (требует ключ)
+═══════════════════════════════════════════════════════════════════
+
+1. Получите API ключ: https://console.anthropic.com/
+
+2. В настройках:
+   
+   Provider: anthropic
+   Api Key:  sk-ant-...
+
+3. Готово!
+
+═══════════════════════════════════════════════════════════════════
+
+⚙️ НОВЫЕ НАСТРОЙКИ:
+
+  claudeCommit.provider       - "anthropic" или "bedrock"
+  claudeCommit.awsRegion      - AWS регион (для Bedrock)
+  claudeCommit.awsProfile     - AWS профиль (опционально)
+  
+  Старые настройки работают как прежде!
+
+💡 ПРЕИМУЩЕСТВА BEDROCK:
+
+  ✅ Не нужен API ключ Anthropic
+  ✅ Используйте существующие AWS credentials
+  ✅ Единая биллинг через AWS
+  ✅ IAM permissions и audit trail
+  ✅ VPC endpoints support
+  ✅ Соответствие корпоративным политикам
+
+💰 СТОИМОСТЬ (примерно одинаковая):
+
+  Haiku 4.5:   ~$0.001 за commit  ← Рекомендуется
+  Sonnet 4.6:  ~$0.01 за commit
+  Opus 4.8:    ~$0.05 за commit
+
+📋 ТРЕБОВАНИЯ ДЛЯ BEDROCK:
+
+  ✓ AWS аккаунт
+  ✓ AWS CLI настроен (aws configure)
+  ✓ Доступ к Amazon Bedrock
+  ✓ Claude модели включены в Bedrock Console
+
+🔍 ДЕТАЛЬНАЯ ИНСТРУКЦИЯ:
+
+  Откройте: BEDROCK_SETUP.md
+  
+  Там вы найдёте:
+  - Пошаговую настройку AWS
+  - Как включить Claude в Bedrock
+  - Примеры IAM policies
+  - Troubleshooting
+  - Использование с AWS SSO
+  - VPC endpoints
+  - И многое другое!
+
+🧪 БЫСТРЫЙ ТЕСТ:
+
+  1. Настройте Bedrock (см. выше)
+  2. Откройте любой git repo
+  3. Сделайте изменения
+  4. Ctrl+Shift+G → нажмите ✨
+  5. Profit! Commit message сгенерирован через Bedrock!
+
+🔄 ПЕРЕКЛЮЧЕНИЕ ПРОВАЙДЕРОВ:
+
+  Легко переключайтесь между Anthropic и Bedrock:
+  
+  Settings → Claude Commit → Provider → выберите нужный
+  
+  Все остальные настройки остаются!
+
+📦 ОБНОВЛЁННЫЕ ЗАВИСИМОСТИ:
+
+  + @aws-sdk/client-bedrock-runtime
+  + @aws-sdk/credential-providers
+  
+  Уже установлены и скомпилированы!
+
+✅ ЧТО ПРОТЕСТИРОВАТЬ:
+
+  □ Переключение провайдеров
+  □ Генерация через Bedrock
+  □ Работа с AWS profiles
+  □ Разные регионы
+  □ Все 3 модели Claude
+
+🐛 TROUBLESHOOTING:
+
+  "AccessDeniedException"
+    → Добавьте IAM permission для bedrock:InvokeModel
+  
+  "Model not found"
+    → Включите модель в Bedrock Console → Model Access
+  
+  "Unable to locate credentials"
+    → Выполните: aws configure
+  
+  Больше решений в BEDROCK_SETUP.md!
+
+🎯 РЕКОМЕНДАЦИИ:
+
+  • Для личного использования: Anthropic API (проще)
+  • Для компаний с AWS: Bedrock (лучше интеграция)
+  • Для compliance/audit: Bedrock (CloudTrail логи)
+  • Для начинающих: Anthropic API (меньше настроек)
+
+📈 ВЕРСИЯ:
+
+  v0.2.0 - AWS Bedrock support
+  
+  Changelog: CHANGELOG.md
+
+═══════════════════════════════════════════════════════════════════
+
+🎉 Готово! Теперь у вас есть ВЫБОР как использовать Claude! 🎉
+
+═══════════════════════════════════════════════════════════════════
+
+Вопросы по настройке Bedrock? → Читайте BEDROCK_SETUP.md
+Проблемы? → Секция Troubleshooting в BEDROCK_SETUP.md
+
+Удачи! 🚀
