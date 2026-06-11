@@ -1,0 +1,104 @@
+{
+  "name": "claude-commit",
+  "displayName": "Claude Commit Message Generator",
+  "description": "Generate commit messages using Claude AI",
+  "version": "0.1.0",
+  "publisher": "your-publisher-name",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "SCM Providers",
+    "Other"
+  ],
+  "keywords": [
+    "git",
+    "commit",
+    "ai",
+    "claude",
+    "commit message"
+  ],
+  "activationEvents": [
+    "onCommand:claude-commit.generate"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "claude-commit.generate",
+        "title": "Generate Commit Message with Claude",
+        "icon": "$(sparkle)"
+      }
+    ],
+    "menus": {
+      "scm/title": [
+        {
+          "command": "claude-commit.generate",
+          "group": "navigation",
+          "when": "scmProvider == git"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Claude Commit",
+      "properties": {
+        "claudeCommit.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Anthropic API key for Claude",
+          "markdownDescription": "Your Anthropic API key. Get one at https://console.anthropic.com/"
+        },
+        "claudeCommit.model": {
+          "type": "string",
+          "default": "claude-haiku-4-5-20251001",
+          "enum": [
+            "claude-haiku-4-5-20251001",
+            "claude-sonnet-4-6",
+            "claude-opus-4-8"
+          ],
+          "enumDescriptions": [
+            "Fast and economical - ideal for commit messages",
+            "Advanced model for complex changes",
+            "Most powerful model"
+          ],
+          "description": "Claude model to use"
+        },
+        "claudeCommit.useConventionalCommits": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use Conventional Commits format (feat:, fix:, etc.)"
+        },
+        "claudeCommit.analyzeAllChanges": {
+          "type": "boolean",
+          "default": true,
+          "description": "Analyze all changes (not just staged)"
+        },
+        "claudeCommit.maxDiffSize": {
+          "type": "number",
+          "default": 50000,
+          "description": "Maximum diff size in characters to send to Claude"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.45.0",
+    "typescript": "^5.1.6",
+    "@vscode/vsce": "^2.19.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.30.0"
+  }
+}
