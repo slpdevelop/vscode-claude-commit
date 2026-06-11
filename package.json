@@ -4,6 +4,18 @@
   "description": "Generate commit messages using Claude AI (Anthropic API or AWS Bedrock)",
   "version": "0.2.0",
   "publisher": "your-publisher-name",
+  "author": {
+    "name": "SLP"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/vscode-claude-commit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/vscode-claude-commit/issues"
+  },
+  "homepage": "https://github.com/yourusername/vscode-claude-commit#readme",
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -16,7 +28,9 @@
     "commit",
     "ai",
     "claude",
-    "commit message"
+    "commit message",
+    "bedrock",
+    "aws"
   ],
   "main": "./out/extension.js",
   "contributes": {
