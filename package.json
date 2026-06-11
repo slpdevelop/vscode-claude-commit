@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "publisher": "your-publisher-name",
   "author": {
-    "name": "SLP"
+    "name": "SLPsss"
   },
   "license": "MIT",
   "repository": {
@@ -31,6 +31,9 @@
     "commit message",
     "bedrock",
     "aws"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
