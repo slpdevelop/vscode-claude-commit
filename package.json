@@ -2,10 +2,10 @@
   "name": "claude-commit",
   "displayName": "Claude Commit Message Generator",
   "description": "Generate commit messages using Claude AI (Anthropic API or AWS Bedrock)",
-  "version": "0.2.1",
-  "publisher": "your-publisher-name",
+  "version": "0.3.3",
+  "publisher": "SLP",
   "author": {
-    "name": "SLPsss"
+    "name": "SLP"
   },
   "license": "MIT",
   "repository": {
@@ -16,6 +16,7 @@
     "url": "https://github.com/yourusername/vscode-claude-commit/issues"
   },
   "homepage": "https://github.com/yourusername/vscode-claude-commit#readme",
+  "icon": "media/claude.png",
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -41,7 +42,10 @@
       {
         "command": "claude-commit.generate",
         "title": "Generate Commit Message with Claude",
-        "icon": "$(sparkle)"
+        "icon": {
+          "light": "media/claude.svg",
+          "dark": "media/claude.svg"
+        }
       }
     ],
     "menus": {
@@ -61,13 +65,27 @@
           "default": "anthropic",
           "enum": [
             "anthropic",
-            "bedrock"
+            "bedrock",
+            "claude-cli"
           ],
           "enumDescriptions": [
             "Direct Anthropic API (requires API key)",
-            "AWS Bedrock (requires AWS credentials)"
+            "AWS Bedrock (requires AWS credentials)",
+            "Claude Code CLI (uses your existing Claude login / subscription — no API key)"
           ],
           "description": "Claude API provider"
+        },
+        "claudeCommit.claudeCliPath": {
+          "type": "string",
+          "default": "claude",
+          "description": "Path or command for the Claude Code CLI (only for 'claude-cli' provider)",
+          "markdownDescription": "Path or command used to launch the Claude Code CLI. Leave as `claude` if it's on your PATH. Only used when provider is 'claude-cli'."
+        },
+        "claudeCommit.claudeCliUseModel": {
+          "type": "boolean",
+          "default": false,
+          "description": "Pass the configured model to the Claude CLI via --model (only for 'claude-cli' provider)",
+          "markdownDescription": "When enabled, the `claudeCommit.model` value is passed to the CLI as `--model`. When disabled (default), the CLI uses your Claude Code default model. Only used when provider is 'claude-cli'."
         },
         "claudeCommit.apiKey": {
           "type": "string",
@@ -101,6 +119,13 @@
             "Most powerful model"
           ],
           "description": "Claude model to use"
+        },
+        "claudeCommit.customInstructions": {
+          "type": "string",
+          "default": "",
+          "editPresentation": "multilineText",
+          "description": "Extra instructions to adjust the commit message style (e.g. language, tone, scope rules). Added to the prompt sent to Claude.",
+          "markdownDescription": "Extra instructions appended to the prompt to adjust the commit message style — for example: `Write commit messages in Russian`, `Always include a scope`, or `Keep the subject under 50 characters`. Leave empty for default behavior."
         },
         "claudeCommit.useConventionalCommits": {
           "type": "boolean",

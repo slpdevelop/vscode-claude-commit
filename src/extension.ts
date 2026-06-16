@@ -10,9 +10,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     const disposable = vscode.commands.registerCommand(
         'claude-commit.generate',
-        async () => {
+        async (arg?: any) => {
             try {
-                await generateCommitMessage();
+                await generateCommitMessage(arg);
             } catch (error) {
                 vscode.window.showErrorMessage(
                     `Failed to generate commit message: ${error instanceof Error ? error.message : 'Unknown error'}`
@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(disposable);
 }
 
-async function generateCommitMessage() {
+async function generateCommitMessage(scmArg?: any) {
     const config = vscode.workspace.getConfiguration('claudeCommit');
     const provider = config.get<string>('provider') || 'anthropic';
     const apiKey = config.get<string>('apiKey');
@@ -57,7 +57,10 @@ async function generateCommitMessage() {
         return;
     }
 
-    const repository = git.repositories[0];
+    const repository = await resolveRepository(git, scmArg);
+    if (!repository) {
+        return;
+    }
 
     await vscode.window.withProgress(
         {
@@ -69,30 +72,71 @@ async function generateCommitMessage() {
             const message = await commitGenerator.generateCommitMessage(repository);
 
             if (message) {
-                const action = await vscode.window.showInformationMessage(
-                    'Commit message generated!',
-                    'Use Message',
-                    'Edit & Use',
-                    'Cancel'
-                );
-
-                if (action === 'Use Message') {
-                    repository.inputBox.value = message;
-                } else if (action === 'Edit & Use') {
-                    const edited = await vscode.window.showInputBox({
-                        value: message,
-                        prompt: 'Edit commit message',
-                        placeHolder: 'Enter commit message',
-                        ignoreFocusOut: true
-                    });
-
-                    if (edited) {
-                        repository.inputBox.value = edited;
-                    }
-                }
+                repository.inputBox.value = message;
             }
         }
     );
+}
+
+function hasChanges(repository: any): boolean {
+    const state = repository.state;
+    if (!state) {
+        return false;
+    }
+    const working = state.workingTreeChanges?.length ?? 0;
+    const indexed = state.indexChanges?.length ?? 0;
+    const merge = state.mergeChanges?.length ?? 0;
+    const untracked = state.untrackedChanges?.length ?? 0;
+    return working + indexed + merge + untracked > 0;
+}
+
+function repositoryLabel(repository: any): string {
+    const rootUri = repository.rootUri;
+    if (rootUri) {
+        const folder = vscode.workspace.getWorkspaceFolder(rootUri);
+        if (folder) {
+            return folder.name;
+        }
+        const path = rootUri.fsPath as string;
+        return path.split(/[\\/]/).filter(Boolean).pop() || path;
+    }
+    return 'repository';
+}
+
+async function resolveRepository(git: any, scmArg?: any): Promise<any | undefined> {
+    const repositories: any[] = git.repositories;
+
+    // Invoked from the SCM title icon — VS Code passes the SourceControl (or a
+    // repository) of the panel that was clicked. Use exactly that repository.
+    const scmRoot = scmArg?.rootUri?.fsPath as string | undefined;
+    if (scmRoot) {
+        const matched = repositories.find(
+            repo => (repo.rootUri?.fsPath as string | undefined) === scmRoot
+        );
+        if (matched) {
+            return matched;
+        }
+    }
+
+    // Invoked from the command palette — always let the user choose.
+    if (repositories.length === 1) {
+        return repositories[0];
+    }
+
+    const picked = await vscode.window.showQuickPick(
+        repositories.map(repo => ({
+            label: repositoryLabel(repo),
+            description: repo.rootUri?.fsPath,
+            detail: hasChanges(repo) ? '$(diff) Has changes' : 'No changes',
+            repository: repo
+        })),
+        {
+            placeHolder: 'Select a repository to generate a commit message for',
+            ignoreFocusOut: true
+        }
+    );
+
+    return picked?.repository;
 }
 
 export function deactivate() {}
