@@ -10,12 +10,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/vscode-claude-commit.git"
+    "url": "https://github.com/slpdevelop/vscode-claude-commit.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/vscode-claude-commit/issues"
+    "url": "https://github.com/slpdevelop/vscode-claude-commit/issues"
   },
-  "homepage": "https://github.com/yourusername/vscode-claude-commit#readme",
+  "homepage": "https://github.com/slpdevelop/vscode-claude-commit#readme",
   "icon": "media/claude.png",
   "engines": {
     "vscode": "^1.80.0"
